@@ -56,6 +56,11 @@ class Parser:
         """
         return self._parse_bin_op(self.term, tok.AND)
 
+    def _parse_un_op(self) -> ast.AST:
+        token = self.current_token
+        self.consume(token.type)
+        return ast.UnOp(op=token, right=self.term())
+
     def _parse_bin_op(
             self, node_func: Callable[[], ast.AST], token_type) -> ast.AST:
         node = node_func()
@@ -71,12 +76,15 @@ class Parser:
         """
         term : statement
              | LPAREN expr RPAREN
+             | NOT term
         """
         if self.current_token.type == tok.LPAREN:
             self.consume(tok.LPAREN)
             node = self.expr()
             self.consume(tok.RPAREN)
             return node
+        if tok.is_un_op(self.current_token.type):
+            return self._parse_un_op()
         return self.statement()
 
     def statement(self) -> Union[ast.ASTValueType, ast.Var, ast.Constraint]:

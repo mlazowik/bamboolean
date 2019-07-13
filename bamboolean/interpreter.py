@@ -22,6 +22,13 @@ class Interpreter(NodeVisitor):
         raise BambooleanRuntimeError(
             "Runtime error occured. {extra}".format(extra=extra))
 
+    def visit_UnOp(self, node) -> bool:
+        op_type = node.op.type
+        if op_type == tok.NOT:
+            return ~ self.visit(node.right)
+        else:
+            self.error("Could not evaluate unary operator")
+
     def visit_BinOp(self, node) -> bool:
         op_type = node.op.type
         if op_type == tok.AND:

@@ -11,6 +11,12 @@ class InterpreterTestCase(unittest.TestCase):
         self.assertTrue(interpret(text, {'x': 50}))
         self.assertFalse(interpret(text, {'x': 10}))
 
+    def test_not(self):
+        self.assertTrue(interpret('not x', {'x': False}))
+
+    def test_multi_not(self):
+        self.assertTrue(interpret('not not x', {'x': True}))
+
     def assertResults(self, expression, sym_tab, results):
         self.assertEqual(
             list(map((lambda args: interpret(
@@ -44,15 +50,6 @@ class InterpreterTestCase(unittest.TestCase):
         }
         self.assertTrue(interpret(fixtures.operators_precedence, sym_tab))
 
-    def test_implicit_boolean_cast(self):
-        sym_tab = OrderedDict([
-            ('x', [42, 0, 44.4, 0]),
-            ('y', ['string', '', '', 'unknown']),
-            ('z', [0, False, True, 444]),
-        ])
-        results = [True, False, True, True]
-        self.assertResults(fixtures.implicit_boolean_cast, sym_tab, results)
-
     def test_empty_expr_evaluates_to_true(self):
         self.assertTrue(interpret('', {}))
 
@@ -73,8 +70,3 @@ class InterpreterTestCase(unittest.TestCase):
         self.assertFalse(interpret('0', {}))
         self.assertFalse(interpret('""', {}))
         self.assertFalse(interpret('False', {}))
-
-    def test_complex_constant_statement(self):
-        false_const_statement = "42 AND False OR ''"
-        self.assertTrue(interpret(fixtures.constant_statements, {}))
-        self.assertFalse(interpret(false_const_statement, {}))

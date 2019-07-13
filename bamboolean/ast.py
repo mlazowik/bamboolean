@@ -56,6 +56,18 @@ class Constraint(AST):
         ]
 
 
+class UnOp(AST):
+    def __init__(self, op: Token, right: AST) -> None:
+        self.op = op
+        self.right = right
+
+    def tree_repr(self) -> List[Any]:
+        return [
+            self.op.tree_repr(),
+            self.right.tree_repr(),
+        ]
+
+
 class BinOp(AST):
     def __init__(self, left: AST, op: Token, right: AST) -> None:
         self.left = left
