@@ -25,9 +25,9 @@ class Interpreter(NodeVisitor):
     def visit_BinOp(self, node) -> bool:
         op_type = node.op.type
         if op_type == tok.AND:
-            return self.visit(node.left) and self.visit(node.right)
+            return self.visit(node.left) & self.visit(node.right)
         elif op_type == tok.OR:
-            return bool(self.visit(node.left) or self.visit(node.right))
+            return bool(self.visit(node.left) | self.visit(node.right))
         else:
             self.error("Could not evaluate binary operator")
 
