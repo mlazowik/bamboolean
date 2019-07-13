@@ -3,7 +3,7 @@ from typing import Any, NoReturn
 import operator as built_in_op
 
 from . import tokens as tok
-from .exceptions import BambooleanRuntimeError
+from .exceptions import BambooleanRuntimeError, BambooleanInterpreterError
 from .ast import AST, TokenBasedAST
 from .node_visitor import NodeVisitor
 
@@ -58,7 +58,13 @@ class Interpreter(NodeVisitor):
 
     def visit_Var(self, node: TokenBasedAST) -> Any:
         var_name = node.value
-        return self.symbol_table.get(var_name, '')
+        try:
+            var_value = self.symbol_table[var_name]
+        except KeyError:
+            raise BambooleanInterpreterError(
+                "Undefined variable: {}".format(str(var_name).lower()))
+
+        return var_value
 
     def visit_Num(self, node) -> Number:
         return node.value

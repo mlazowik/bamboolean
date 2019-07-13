@@ -2,6 +2,10 @@ class BambooleanError(Exception):
     pass
 
 
+class BambooleanInterpreterError(BambooleanError):
+    pass
+
+
 class BambooleanLexerError(BambooleanError):
     pass
 

@@ -1,6 +1,7 @@
 import unittest
 from collections import OrderedDict
 
+from bamboolean.exceptions import BambooleanInterpreterError
 from bamboolean.factories import interpret
 from . import fixtures
 
@@ -16,6 +17,10 @@ class InterpreterTestCase(unittest.TestCase):
 
     def test_multi_not(self):
         self.assertTrue(interpret('not not x', {'x': True}))
+
+    def test_undefined(self):
+        with self.assertRaises(BambooleanInterpreterError):
+            interpret('x', {})
 
     def assertResults(self, expression, sym_tab, results):
         self.assertEqual(
